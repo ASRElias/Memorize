@@ -10,8 +10,8 @@ import SwiftUI
 
 struct Grid<Item, ItemView>: View where Item: Identifiable, ItemView: View {
     
-    var items: [Item]
-    var viewForItem: (Item) -> ItemView
+    private var items: [Item]
+    private var viewForItem: (Item) -> ItemView
     
     var body: some View {
         GeometryReader { geometry in
@@ -19,7 +19,12 @@ struct Grid<Item, ItemView>: View where Item: Identifiable, ItemView: View {
         }
     }
     
-    func body(for layout: GridLayout) -> some View {
+    init(_ items: [Item], viewForItem: @escaping (Item) -> ItemView) {
+        self.items = items
+        self.viewForItem = viewForItem
+    }
+    
+    private func body(for layout: GridLayout) -> some View {
         ForEach(items) { item in
             self.body(for: item, in: layout)
         }

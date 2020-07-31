@@ -13,7 +13,7 @@ struct EmojiMemoryGameView: View {
     @ObservedObject var emojiMemoryGame: EmojiMemoryGame
     
     var body: some View {
-        Grid(items: emojiMemoryGame.cards) { card in
+        Grid(emojiMemoryGame.cards) { card in
             CardView(card: card)
                 .onTapGesture {
                     self.emojiMemoryGame.chooseCard(card: card)
@@ -30,9 +30,9 @@ struct CardView: View {
     
     // MARK: - Drawing Constants
     
-    let cornerRadius: CGFloat = 10.0
-    let edgeLineWidth: CGFloat = 3
-    let fontScaleFactor: CGFloat = 0.75
+    private let cornerRadius: CGFloat = 10.0
+    private let edgeLineWidth: CGFloat = 3
+    private let fontScaleFactor: CGFloat = 0.75
     
     var card: MemoryGame<String>.Card
     
@@ -42,7 +42,7 @@ struct CardView: View {
         }
     }
     
-    func body(for size: CGSize) -> some View {
+    private func body(for size: CGSize) -> some View {
         ZStack {
             if card.isFaceUp {
                 RoundedRectangle(cornerRadius: cornerRadius)
@@ -61,7 +61,7 @@ struct CardView: View {
         .font(Font.system(size: fontSize(for: size)))
     }
     
-    func fontSize(for size: CGSize) -> CGFloat {
+    private func fontSize(for size: CGSize) -> CGFloat {
         min(size.width, size.height) * fontScaleFactor
     }
 }
