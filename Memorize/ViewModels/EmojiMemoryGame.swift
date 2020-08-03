@@ -18,7 +18,7 @@ class EmojiMemoryGame: ObservableObject {
     }
 
     // MARK: - Intent(s)
-    func chooseCard(card: MemoryGame<String>.Card) {
+    func choose(card: MemoryGame<String>.Card) {
         objectWillChange.send()
         memoryGame.choose(card)
     }

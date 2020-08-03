@@ -16,7 +16,7 @@ struct EmojiMemoryGameView: View {
         Grid(emojiMemoryGame.cards) { card in
             CardView(card: card)
                 .onTapGesture {
-                    self.emojiMemoryGame.chooseCard(card: card)
+                    self.emojiMemoryGame.choose(card: card)
             }
             .padding(5.0)
         }
@@ -28,37 +28,26 @@ struct EmojiMemoryGameView: View {
 
 struct CardView: View {
     
-    // MARK: - Drawing Constants
-    
-    private let cornerRadius: CGFloat = 10.0
-    private let edgeLineWidth: CGFloat = 3
-    private let fontScaleFactor: CGFloat = 0.75
-    
+    private let fontScaleFactor: CGFloat = 0.7
     var card: MemoryGame<String>.Card
-    
     var body: some View {
         GeometryReader { geometry in
             self.body(for: geometry.size)
         }
     }
     
+    @ViewBuilder
     private func body(for size: CGSize) -> some View {
-        ZStack {
-            if card.isFaceUp {
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill()
-                    .foregroundColor(.white)
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(lineWidth: edgeLineWidth)
+        if card.isFaceUp || !card.isMatched {
+            ZStack {
+                Pie(startAngle: Angle.degrees(0-90), endAngle: Angle.degrees(110-90), clockwise: true)
+                    .padding(5)
+                    .opacity(0.4)
                 Text(self.card.content)
-            } else {
-                if !card.isMatched {
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill()
-                }
+                    .font(Font.system(size: fontSize(for: size)))
             }
+            .cardify(isFaceUp: card.isFaceUp)
         }
-        .font(Font.system(size: fontSize(for: size)))
     }
     
     private func fontSize(for size: CGSize) -> CGFloat {
@@ -69,7 +58,9 @@ struct CardView: View {
 struct ContentView_Previews: PreviewProvider {
     
     static var previews: some View {
-        EmojiMemoryGameView(emojiMemoryGame: EmojiMemoryGame())
+        let game = EmojiMemoryGame()
+        game.choose(card: game.cards[0])
+        return EmojiMemoryGameView(emojiMemoryGame: game)
     }
     
 }
